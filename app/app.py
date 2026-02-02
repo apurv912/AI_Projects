@@ -9,25 +9,43 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Input")
-    problem = st.text_input("Problem (1 line)", placeholder="e.g., Turn a job description into ATS keywords + match score")
-    user = st.text_input("User", placeholder="e.g., Job-seeking PM")
+    problem = st.text_input("Problem (1 line)", value="Analyze a job description for ATS keywords, match score, and tailored resume bullets")
+    user = st.text_input("User", value="Product Manager job seeker")
     context = st.text_area("Context / Data", height=220, placeholder="Paste JD / notes / text here...")
+    highlights = st.text_area(
+    "My Resume Highlights (paste 5–10 bullets)",
+    height=160,
+    placeholder="Paste your best bullets / metrics here..."
+)
 
 with col2:
     st.subheader("Output")
     st.write("**Generated Prompt (copy/paste into ChatGPT):**")
     prompt = f"""
-You are an AI Product Manager assistant.
+You are an AI career assistant for a Product Manager.
 
-Problem: {problem}
-User: {user}
+Return output in this exact structure (concise):
 
-Task:
-1) Produce the best possible output for this problem.
-2) Provide 5 bullets: Problem → User → Approach → Risks → Next step.
-3) Keep it concise.
+1) Role Summary (max 3 lines): what this role really needs.
+2) ATS Keyword Pack:
+   - Hard skills/tools (10–15)
+   - Domain/functional keywords (10–15)
+   - Soft skills (6–10)
+3) Match Score (0–100) + 5 reasons.
+4) Gaps:
+   - Missing keywords (max 10)
+   - Missing experiences (max 5)
+5) Tailored Resume Bullets:
+   - Rewrite my highlights into 4 bullets in impact-first format.
+   - Keep each bullet <= 2 lines.
+6) Interview Ammo:
+   - 5 likely questions for this JD
+   - 1 strong story outline (Situation → Actions → Metrics → Result)
 
-Context:
+Candidate resume highlights:
+{highlights}
+
+Job description:
 {context}
 """.strip()
     st.code(prompt, language="markdown")
