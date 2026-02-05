@@ -171,3 +171,13 @@ metrics, prioritizing via impact vs effort (RICE-style), and building rapid low/
   **Metrics:** Build time **35–40 → 5–10 mins**, cost **↓40–50%**, QA **65–70% → 80–85%**, scale **1 → 5 brands** and **3 → 30–40 users**.
   **Result:** Delivered a production GenAI workflow with measurable ROI and a clear KPI loop—directly aligned with “applied AI project delivery + platform trade-offs” for this role.
 
+Problem: Job applications need fast JD-to-resume alignment and ATS keyword coverage.
+
+User: PM/TPM job seeker applying to multiple roles weekly.
+
+Approach: Lightweight Streamlit app that generates a consistent, structured prompt using JD + candidate highlights.
+
+Risks: Output quality depends on the model used; needs guardrails for hallucinations and keyword stuffing.
+
+Next step: Add optional LLM API integration + “keyword diff” view + export to PDF.
+
