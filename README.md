@@ -1,57 +1,39 @@
-# Build 1 — JD Analyzer MicroBuild
-## What it does
-Paste a Job Description + my resume highlights → generates a structured analysis prompt for:
-- ATS keyword pack
-- match score + gaps
-- tailored resume bullets (impact-first)
-- interview questions + story outline
+# AI PM Portfolio — RAG Microbuild Ladder (PM-first)
 
-## How to run
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python3 -m streamlit run app/app.py
-## PM Story (5 bullets)
-Problem: Job applications need fast JD-to-resume alignment and ATS keyword coverage.
+This repo is my **AI PM portfolio** built as a **RAG microbuild ladder**: each build is a small, shippable artifact with clear acceptance criteria, eval notes, and proof-ready docs.
 
-User: PM/TPM job seeker applying to multiple roles weekly.
+## Why this exists (PM framing)
+- **Quality:** improve retrieval relevance and answer correctness over iterations
+- **Trust:** enforce citations + validate them
+- **Reliability:** handle quota/rate limits gracefully (no crashes)
+- **Cost/latency:** add switches like retrieve-only + caching/guardrails
+- **Proof:** each build ships with README + eval set + results template
 
-Approach: Lightweight Streamlit app that generates a consistent, structured prompt using JD + candidate highlights.
+---
 
-Risks: Output quality depends on the model used; needs guardrails for hallucinations and keyword stuffing.
+## Builds
 
-Next step: Add optional LLM API integration + “keyword diff” view + export to PDF.
+### ✅ Build 2 — Basic RAG
+**Folder:** `build2_rag_qa/`  
+**What:** baseline RAG using Gemini via OpenAI-compatible `base_url`.
 
-# Build 2 — Doc Q&A (RAG-lite) — Gemini API
+### ✅ Build 2.1 — Caching + Similarity Guardrail
+**Folder:** `build2_1_rag_cached_guardrails/`  
+**What:** reuse answers for very similar queries to reduce cost/latency.
 
-## What it does
-Paste any document + ask a question → the app:
-1) chunks the document
-2) embeds chunks + question
-3) retrieves Top-K relevant chunks (with similarity scores)
-4) generates a grounded answer using ONLY retrieved chunks (refuses if insufficient info)
+### ✅ Build 2.2 — Citations + Citation Validator
+**Folder:** `build2_2_rag_citations/`  
+**What:** answers include chunk citations like `[C001]` + validator flags invalid citations.
 
-## Why this matters (AI PM angle)
-- Demonstrates the core RAG pattern: chunking → retrieval → grounded generation
-- Adds transparency: shows retrieved evidence + similarity scores
-- Adds a basic hallucination guardrail: “I don’t have enough information…”
+### ✅ Build 2.3 — 2-Stage Retrieval + Reranking + Quota-Safe UX
+**Folder:** `build2_3_rag_reranking/`  
+**What:**
+- 2-stage retrieval: **embedding Top-N → LLM rerank → Top-K**
+- Preserves: caching/guardrails + citations + validator
+- Adds: **retrieve-only mode** (skip generation to save quota)
+- Adds: **graceful degradation on 429** (fallback paths; no crash)
+- Adds: rerank debug expander (stage1 vs final + fallback flags)
 
-## How to run (Mac)
-```bash
-cd ~/Projects/microbuild-template
-source .venv/bin/activate
-export GEMINI_API_KEY="YOUR_KEY"
-python -m streamlit run build2_rag_qa/app.py
+---
 
-##PM Story
 
-Problem: Users need fast, trustworthy answers from long docs without hallucinations.
-
-User: PM/teams scanning JDs, PRDs, meeting notes, policies.
-
-Approach: RAG-lite app using embeddings retrieval + grounded generation.
-
-Risks: Retrieval misses key chunks; model may still over-generalize if context is thin.
-
-Next step: Add caching, better chunking, and citations per chunk in the final answer.
