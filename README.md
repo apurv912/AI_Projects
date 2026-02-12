@@ -34,6 +34,19 @@ This repo is my **AI PM portfolio** built as a **RAG microbuild ladder**: each b
 - Adds: **graceful degradation on 429** (fallback paths; no crash)
 - Adds: rerank debug expander (stage1 vs final + fallback flags)
 
+### ✅ Build 2.4 — Evaluation + Scorecard (A/B: Rerank OFF vs ON)
+**Folder:** `build2_4_rag_eval_scorecard/`  
+**What:** adds a production-like evaluation layer to prevent regressions and prove quality changes.
+
+**Adds:**
+- Golden set questions (reproducible): `eval_questions.md`
+- Automated A/B runner (CLI): rerank **OFF vs ON**
+- Scorecard report: `outputs/eval_report.md` (reliability + latency proxies; trust proxy when generation available)
+- Audit trail: `outputs/eval_results.csv` (retrieved chunk IDs, fallback flags, timings, errors)
+- Quota-safe switches: `--retrieve-only` and `--max-q`
+
+**Current signal:** under quota constraints, rerank can fall back (100%) and add latency—this scorecard makes the tradeoff visible and supports a default decision (**OFF for now**).
+
 ---
 
 
