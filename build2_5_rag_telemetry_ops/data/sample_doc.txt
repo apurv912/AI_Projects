@@ -1,0 +1,78 @@
+Phoenix Migration PRD (Sample)
+
+Objective
+We will migrate the legacy “Orion” billing workflow to the new “Phoenix” pipeline to reduce incident load and improve billing correctness. Today, Orion produces frequent reconciliation failures and requires manual intervention.
+
+Success Metrics (KPIs)
+1) Billing correctness: reduce reconciliation mismatches by 40% (downward)
+2) Reliability: reduce SEV-1 incidents related to billing by 30% (downward)
+3) Latency: keep end-to-end billing cycle time within +10% of current baseline (flat-ish)
+
+Scope
+In scope:
+- Migrate billing event ingestion to Phoenix
+- Implement parity checks between Orion and Phoenix for 2 release cycles
+- Add monitoring dashboards and alerts for key billing health signals
+
+Out of scope:
+- Pricing model changes
+- UI redesign of the billing console
+- New payment providers
+
+Timeline
+Phase 1 (2 weeks): Shadow mode
+- Phoenix runs in parallel, no customer impact
+Exit criteria: parity checks show ≥ 99.5% match for 7 consecutive days
+
+Phase 2 (2 weeks): Gradual rollout
+- 10% → 50% → 100% traffic over 14 days
+Exit criteria: error rate does not exceed +0.2% above baseline for 72 hours at each step
+
+Phase 3 (1 week): Decommission Orion
+Exit criteria: rollback window passes with no SEV-1 and finance sign-off complete
+
+Rollback Policy
+If billing error rate increases by more than +0.2% above baseline for 2 consecutive hours, rollback traffic to Orion and open a SEV-1 incident. Rollback must be executable within 30 minutes.
+
+Monitoring & Alerting
+Monitor:
+- billing error rate (critical)
+- reconciliation mismatch rate (critical)
+- event ingestion lag (warning)
+- end-to-end cycle time (warning)
+Alerts:
+- Page on-call on critical metric breach
+- Create ticket for warnings with trending analysis
+
+Incidents (Definitions)
+SEV-1: customer billing impact or data correctness breach requiring immediate attention.
+SEV-1 SLA: acknowledge within 10 minutes, mitigation started within 30 minutes.
+
+Data Retention
+Billing events in Phoenix are retained for 180 days. Aggregated billing summaries retained for 2 years.
+
+Stakeholders & Escalation
+Owner: Product Manager (Billing)
+Engineering lead: Backend lead (Phoenix)
+Finance approver: Finance operations manager
+Escalation path: On-call engineer → Eng lead → PM → Director
+
+Risks & Mitigations
+Risk 1: Phoenix ingestion backlog under peak load
+Mitigation: load testing + autoscaling policies before Phase 2
+
+Risk 2: Parity checks create noisy false positives
+Mitigation: define thresholds and sampling strategy; review weekly with Finance
+
+Dependency / Potential blocker
+A required schema change in upstream “Atlas” events must be shipped before Phase 2 to avoid data loss. De-risk via early integration testing in Phase 1.
+
+Cost / Budget Constraint
+Avoid increasing infra cost by more than 15% during rollout. If exceeded, reduce parallelization window or optimize ingestion batching.
+
+Go / No-Go Checklist
+- Parity checks ≥ 99.5% for 7 days
+- Rollback tested and verified < 30 minutes
+- Critical alerts paging correctly
+- Finance sign-off
+- On-call runbook updated
