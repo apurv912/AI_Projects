@@ -71,3 +71,27 @@ This repo is my **AI PM portfolio** built as a **RAG microbuild ladder**: each b
   - If generation fails (incl 429) → readable error + telemetry still logs + dashboard still works
 
 **PM takeaway:** this build turns “a working demo” into an **operable system** with SLO-style visibility and graceful degradation.
+### ✅ Build 2.6 — Safety + Robustness Guardrails (Trustworthy RAG)
+**Folder:** `build2_6_rag_safety_guardrails/`  
+**What:** adds production-grade safety + robustness so the RAG engine can be trusted under adversarial prompts and high-stakes queries.
+
+**Adds:**
+- **Prompt injection detection** (lightweight patterns) + strict-mode behavior  
+  - Logs: `injection_detected`
+- **Strict grounding (fail-closed)**  
+  - Answer only from retrieved chunks; if evidence weak / citation invalid → **refuse / not enough info**  
+  - Logs: `grounding_failed`, `refusal_triggered`
+- **Risky-domain routing** (medical/legal/financial)  
+  - No definitive advice; safe next steps + escalation UX  
+  - Logs: `risk_domain`
+- **Optional PII redaction toggle** (emails/phones masked before model call)  
+  - Logs: `pii_redacted`
+- **Safety proof pack**
+  - `safety_tests.md` (10 adversarial prompts)
+  - `safety_report.md` (template with run_id evidence)
+  - `safety_runner.py` (automated retrieve-only safety runner → PASS/FAIL/SKIP report)
+- **Telemetry + Ops dashboard extensions**
+  - New safety rates: injection detected rate, refusal rate, grounding failure rate, PII redaction rate
+
+**Current signal:** generation may be quota-limited (429), but the build remains **demoable** via `retrieve_only=true` + `python3 safety_runner.py` with report outputs in `outputs/`.
+
