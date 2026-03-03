@@ -18,7 +18,7 @@
 | Q02 |  |  |  |  |  |  |  |  |
 | Q03 |  |  |  |  |  |  |  |  |
 
-## Decision criteia
+## Decision criteria
 - Keep rerank ON by default? (Y/N)
 - Why (quality lift vs latency/cost vs fallback rate):
 - Next experiment (if needed):
