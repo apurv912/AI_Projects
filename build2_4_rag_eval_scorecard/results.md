@@ -4,7 +4,7 @@
 - `outputs/eval_report.md` (aggregates)
 - `outputs/eval_results.csv` (per-question detail)
 
-## Summary (paste from eval_report)
+## Summary 
 - Citation validity rate (OFF vs ON):
 - No-answer rate (OFF vs ON):
 - Rerank fallback rate (ON only):
